@@ -22,7 +22,9 @@ extern "C"
 
 // TODO(jacobperron): replace type support typedef with one defined in rosdl_generator_c
 // #include "rosidl_generator_c/action_type_support_struct.h"
-typedef struct rosidl_action_type_support_t rosidl_action_type_support_t;
+typedef struct rosidl_action_type_support_t
+{
+} rosidl_action_type_support_t;
 
 #include "rcl_action/goal_handle.h"
 #include "rcl_action/types.h"
