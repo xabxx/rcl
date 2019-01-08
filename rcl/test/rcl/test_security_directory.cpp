@@ -15,9 +15,9 @@
 
 #include <gtest/gtest.h>
 
+#include <string>
 #include "rcl/security_directory.h"
 #include "rcutils/filesystem.h"
-#include <stdlib.h>
 
 #define ROOT_NAMESPACE "/"
 #define TEST_SECURITY_DIRECTORY_RESOURCES_DIR_NAME "test_security_directory"
@@ -29,7 +29,7 @@ static int putenv_wrapper(const char * env_var)
 #ifdef _WIN32
   return _putenv(env_var);
 #else
-  return putenv((char *) env_var);
+  return putenv(reinterpret_cast<char *>(const_cast<char *>(env_var)));
 #endif
 }
 
@@ -129,7 +129,8 @@ TEST(test_rcl_get_secure_root, nodeSecurityDirectoryOverride) {
   ASSERT_STREQ(rcl_get_secure_root("name shouldn't matter", "namespace shouldn't matter",
     &allocator), TEST_RESOURCES_DIRECTORY);
 
-  /* The override provided should exist. Providing correct node/namespace/root dir won't help if the node override is invalid. */
+  /* The override provided should exist. Providing correct node/namespace/root dir won't help
+   * if the node override is invalid. */
   putenv_wrapper(
     ROS_SECURITY_NODE_DIRECTORY_VAR_NAME
     "=TheresN_oWayThi_sDirectory_Exists_hence_this_would_fail");
